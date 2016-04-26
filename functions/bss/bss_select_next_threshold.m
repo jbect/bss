@@ -48,27 +48,28 @@ end
 function [uu_median, g_next] = bss_threshold_dichotomy_...
     (ya, ystd, g_curr, p0, propu, u_final)
 
-if isempty(propu), % initial guess
-    propu = quantile(ya, 1 - p0);
+if isempty (propu), % initial guess
+    propu = quantile (ya, 1 - p0);
 end
 
 theta = 1e-9;
 
-% test with u_final, first
-g_next = g_fun(u_final, ya, ystd);
-condi_prob = mean(g_next ./ g_curr);
+% First, test if we can jump directly to u_final
+g_next = g_fun (u_final, ya, ystd);
+condi_prob = mean (g_next ./ g_curr);
 if condi_prob > p0,
     uu_median = u_final;
     return;
 end
 
-% change p0 if we're close to the final threshold
-if condi_prob > p0^2,
-    p0 = sqrt(condi_prob);
+% Second, change p0 if we're close to the final threshold
+% (note: this is not explained in arXiv:1601.02557v1... is it really useful ?)
+if condi_prob > p0 ^ 2,
+    p0 = sqrt (condi_prob);
 end
 
-g_next = g_fun(propu, ya, ystd);
-condi_prob = mean(g_next ./ g_curr);
+g_next = g_fun (propu, ya, ystd);
+condi_prob = mean (g_next ./ g_curr);
 
 if condi_prob == p0
     uu_median = propu;
@@ -79,37 +80,37 @@ if condi_prob > p0
     prop_u = propu;
     while condi_prob > p0
         prop_u = prop_u + 1;
-        g_next = g_fun(prop_u, ya, ystd);
-        condi_prob = mean(g_next ./ g_curr);
+        g_next = g_fun (prop_u, ya, ystd);
+        condi_prob = mean (g_next ./ g_curr);
     end
     prop_l = propu;
 elseif condi_prob < p0
     prop_l = propu;
     while condi_prob < p0
         prop_l = prop_l - 1;
-        g_next = g_fun(prop_l, ya, ystd);
-        condi_prob = mean(g_next ./ g_curr);
+        g_next = g_fun (prop_l, ya, ystd);
+        condi_prob = mean (g_next ./ g_curr);
     end
     prop_u = propu;
 end
 
-uu_median = prop_l + (prop_u - prop_l)/2;
-g_next = g_fun(uu_median, ya, ystd);
-condi_uu = mean(g_next ./ g_curr);
+uu_median = prop_l + (prop_u - prop_l) / 2;
+g_next = g_fun (uu_median, ya, ystd);
+condi_uu = mean (g_next ./ g_curr);
 
 count_iter = 0;
 
-while (prop_u - prop_l) > theta %abs( condi_uu - p0 ) > theta
+while (prop_u - prop_l) > theta
     if condi_uu == p0
         break;
     elseif condi_uu > p0
         prop_l = uu_median;
-    else %if condi_uu < p0
+    else % if condi_uu < p0
         prop_u = uu_median;
     end
-    uu_median = (prop_l + prop_u)/2;
-    g_next = g_fun(uu_median, ya, ystd);
-    condi_uu = mean(g_next ./ g_curr);
+    uu_median = (prop_l + prop_u) / 2;
+    g_next = g_fun (uu_median, ya, ystd);
+    condi_uu = mean (g_next ./ g_curr);
     
     count_iter = count_iter + 1;
     if count_iter == 500, keyboard, end
