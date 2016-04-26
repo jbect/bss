@@ -77,7 +77,7 @@ if any (isnan (N_std)), keyboard; end
 
 TN = struct(                                            ...
     'dim', dim, 'mu', mu, 'sd', sd, 'xL', xL, 'xU', xU, ...
-    'mean', N_mean, 'var', N_var, 'std', N_std          );
+    'mean', N_mean, 'var', N_var, 'std', N_std, 'normC', prod (normC));
 
 TN = class (TN, 'TruncatedNormalDistribution');
 

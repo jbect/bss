@@ -54,9 +54,6 @@ end
 accept_rate.expected = zeros (1, options.MH.nb_steps);
 accept_rate.observed = zeros (1, options.MH.nb_steps);
 
-mu = mean (input_distrib);
-tau = 1 ./ (std (input_distrib) .^ 2);
-
 for k = 1 : options.MH.nb_steps
     
     % Gaussian proposal distribution
@@ -96,11 +93,11 @@ for k = 1 : options.MH.nb_steps
     end
     
     % Twice the anti-logpdf of the input distribution
-    Q2 = sum (bsxfun (@times, bsxfun (@minus, x2, mu) .^ 2, tau), 2);
-    Q1 = sum (bsxfun (@times, bsxfun (@minus, x1, mu) .^ 2, tau), 2);
+    Q2 = nlogpdf (input_distrib, x2, false);
+    Q1 = nlogpdf (input_distrib, x1, false);
     
     % Acceptance ratio (symmetric RW)
-    acceptance_ratio = min (1, (exp (0.5 * (Q1 - Q2))) .* g_ratio);
+    acceptance_ratio = min (1, (exp (Q1 - Q2)) .* g_ratio);
     
     % Accept / reject
     a = (rand (m, 1) < acceptance_ratio);
