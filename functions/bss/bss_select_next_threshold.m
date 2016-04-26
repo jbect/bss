@@ -48,10 +48,6 @@ end
 function [uu_median, g_next] = bss_threshold_dichotomy_...
     (ya, ystd, g_curr, p0, propu, u_final)
 
-if isempty (propu), % initial guess
-    propu = quantile (ya, 1 - p0);
-end
-
 theta = 1e-9;
 
 % First, test if we can jump directly to u_final
@@ -66,6 +62,11 @@ end
 % (note: this is not explained in arXiv:1601.02557v1... is it really useful ?)
 if condi_prob > p0 ^ 2,
     p0 = sqrt (condi_prob);
+end
+
+% Provide an initial guess if input argument 'propu' is empty
+if isempty (propu)
+    propu = quantile (ya, 1 - p0);
 end
 
 g_next = g_fun (propu, ya, ystd);
