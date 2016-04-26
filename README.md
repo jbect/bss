@@ -57,6 +57,25 @@ downloading a snapshot of the default branch (see below).
     to initialize BSS (and STK).  That's all, you're ready to use BSS.
 
 
+## Test
+
+You can test that BSS works as expected by running the test script:
+
+    script_test_bss
+
+The results are summarized at the end in a table that should look like this:
+
+    case #001:  DIM=6  pf_estim=1.05e-05  pf_ref=9.09e-06  ratio=1.15e+00  
+    case #002:  DIM=6  pf_estim=1.77e-08  pf_ref=1.56e-08  ratio=1.13e+00  
+    case #003:  DIM=2  pf_estim=4.15e-06  pf_ref=3.94e-06  ratio=1.05e+00  
+    case #004:  DIM=2  pf_estim=7.19e-09  pf_ref=5.49e-09  ratio=1.31e+00  
+    case #005:  DIM=1  pf_estim=8.26e-06  pf_ref=1.00e-05  ratio=8.26e-01  
+    case #006:  DIM=1  pf_estim=1.07e-05  pf_ref=1.00e-05  ratio=1.07e+00  
+    case #101:  DIM=2  pf_estim=1.37e-04  pf_ref=2.03e-04  ratio=6.73e-01 
+
+The ratios reported in the last column should be reasonably close to one.
+
+
 ## Licence
 
 Copyright (C) 2016 CentraleSupelec
