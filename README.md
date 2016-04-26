@@ -35,7 +35,7 @@ downloading a snapshot of the default branch (see below).
 
  1. Clone the BSS repository wherever you like:
 
-        git https://github.com/jbect/bss.git bss
+        git clone https://github.com/jbect/bss.git bss
         
    (or download and unpack a zip [snapshot of the
     repo](https://github.com/jbect/bss/archive/master.zip
