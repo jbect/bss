@@ -132,29 +132,7 @@ switch CASE_NUM
         % Limit-state function
         LSS_expr = sprintf ('%.20e - f_fourbranch ([x1(:) x2(:)])', ...
             problem.u_final);
-        
-        
-    case 5 %--- 1D toy example ------------------------------------------------
-        
-        DIM = 1;
-        
-        pf_ref = 1e-5;
-        
-        % Input distribution: IDD Gaussian with
-        mu    = 0;
-        sigma = 1;
-        
-        problem = struct(                                    ...
-            'name',           'gauss1da',                    ...
-            'dim',            DIM,                           ...
-            'cost_fun',       @(x)(x),                       ...
-            'input_distrib',  NormalDistribution(mu, sigma), ...
-            'u_final',        norminv(1 - pf_ref),           ...
-            'Pf_true',        pf_ref                         );
-        
-        % Limit-state function
-        LSS_expr = sprintf('%.20e - x1(:)', problem.u_final);
-        
+                        
         
     case 6 %--- 1D toy example ------------------------------------------------
         
@@ -204,6 +182,35 @@ switch CASE_NUM
         % Limit-state function
         LSS_expr = 'x1(:) - x2(:)';
         
+        
+    case {201, 202, 203} %--- Test scalar distrib ------------------------------
+        
+        % Test scalar distributions, with x -> x as a cost function.
+        % Teh threshold is chosen such that pf_ref = 1e-12;
+        
+        pf_ref = 1e-12;
+        
+        switch CASE_NUM
+            case 201
+                P = NormalDistribution (10, 2);
+            case 202
+                P = TruncatedNormalDistribution (10, 2, 9, inf);
+            case 203
+                P = BetaDistribution (2, 5);
+        end
+        
+        name = sprintf ('2xx-%s', class (P));
+        
+        problem = struct (                              ...
+            'name',           name,                     ...
+            'dim',            1,                        ...
+            'cost_fun',       @(x) x,                   ...
+            'input_distrib',  P,                        ...
+            'u_final',        quantile (P, 1 - pf_ref), ...
+            'Pf_true',        pf_ref                    );
+        
+        % Limit-state function
+        LSS_expr = sprintf ('%.20e - x1(:)', problem.u_final);
         
     otherwise
         

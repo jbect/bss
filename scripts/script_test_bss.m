@@ -30,8 +30,9 @@
 
 clear all; close all; clc
 
-s = RandStream ('mt19937ar', 'Seed', 0);
-RandStream.setGlobalStream (s);
+% UNCOMMENT THIS FOR REPRODUCIBLE TESTS IN MATLAB
+% s = RandStream ('mt19937ar', 'Seed', 0);
+% RandStream.setGlobalStream (s);
 
 
 %%
@@ -39,7 +40,7 @@ RandStream.setGlobalStream (s);
 
 result = struct();
 
-LIST_CASES = [1:6 101];
+LIST_CASES = [1:4 6 101 201:203];
 
 for k = 1:length(LIST_CASES),
     
