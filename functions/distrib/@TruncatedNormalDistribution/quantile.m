@@ -24,17 +24,19 @@
 %    You should  have received  a copy  of the  GNU Lesser General Public
 %    License along with BSS;  if not, see <http://www.gnu.org/licenses/>.
 
-function q = quantile (distrib, proba, j)
+function q = quantile (distrib, proba)
 
-% Parameters of the untruncated Gaussian distribution
-mu = distrib.mu(j);
-sd = distrib.sd(j);
+mu = distrib.mu;
+sd = distrib.sd;
 
-pL = normcdf (distrib.xL(j), mu, sd);
-pU = normcdf (distrib.xU(j), mu, sd);
+pL = stk_distrib_normal_cdf (distrib.xL, mu, sd);
+pU = stk_distrib_normal_cdf (distrib.xU, mu, sd);
 
-proba = pL + proba .* (pU - pL);
+% pL + proba * (pU - pL)
+proba = bsxfun (@plus, pL, bsxfun (@times, proba, pU - pL));
 
+% FIXME: Implement stk_distrib_normal_inv in STK with proper broadcasting
+[proba, mu, sd] = stk_commonsize (proba, mu, sd);
 q = norminv (proba, mu, sd);
 
 end % function

@@ -40,9 +40,9 @@ Q = 1e4;
 N0 = 5 * problem.dim;
 
 % Construct a box
-dom = stk_hrect (problem.dim);
+dom = quantile (problem.input_distrib, proba);
+dom = stk_hrect (dom);
 for j = 1:problem.dim
-    dom(:, j) = quantile (problem.input_distrib, proba, j);
     dom.colnames{j} = sprintf ('x%d', j);
 end
 

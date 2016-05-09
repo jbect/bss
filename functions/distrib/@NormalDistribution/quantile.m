@@ -24,8 +24,10 @@
 %    You should  have received  a copy  of the  GNU Lesser General Public
 %    License along with BSS;  if not, see <http://www.gnu.org/licenses/>.
 
-function q = quantile (distrib, proba, j)
+function q = quantile (distrib, proba)
 
-q = norminv (proba, distrib.mu(j), distrib.sd(j));
+% FIXME: Implement stk_distrib_normal_inv in STK with proper broadcasting
+[proba, mu, sd] = stk_commonsize (proba, distrib.mu, distrib.sd);
+q = norminv (proba, mu, sd);
 
 end % function
